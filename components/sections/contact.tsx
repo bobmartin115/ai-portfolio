@@ -6,12 +6,14 @@ import emailjs from "@emailjs/browser"
 export function Contact() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
     setSuccess(false)
-
+    setError(null)
+    console.log("Form submitted")
     const form = e.currentTarget
 
     try {
@@ -26,6 +28,7 @@ export function Contact() {
       form.reset()
     } catch (error) {
       console.error(error)
+      setError("Failed to send message. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -65,13 +68,19 @@ export function Contact() {
             type="submit"
             disabled={loading}
             className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition hover:opacity-80 disabled:opacity-50 dark:bg-white dark:text-black"
-          >
+>
             {loading ? "Sending..." : "Send Message"}
           </button>
 
           {success && (
             <p className="text-sm text-green-500">
               Message sent successfully 🚀
+            </p>
+          )}
+
+          {error && (
+            <p className="text-sm text-red-500">
+              {error}
             </p>
           )}
         </form>
